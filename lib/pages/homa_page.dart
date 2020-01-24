@@ -19,9 +19,11 @@ class HomePage extends StatelessWidget {
       ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Divider(),
+            //Divider(),
             _swiperTarjetas(),
+            _footer(context),
           ],
         ),
       ),
@@ -45,5 +47,25 @@ class HomePage extends StatelessWidget {
                 child: Center(child: CircularProgressIndicator()));
           }
         });
+  }
+
+  Widget _footer(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: <Widget>[
+          Text('Popular', style: Theme
+              .of(context)
+              .textTheme
+              .subhead,),
+          FutureBuilder(
+              future: peliculasProvider.getPopulares(),
+              builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
+                snapshot.data?.forEach((f)=>print(f.title));
+                return Container();
+              }),
+        ],
+      ),
+    );
   }
 }
