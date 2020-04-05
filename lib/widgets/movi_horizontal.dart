@@ -5,22 +5,30 @@ import 'package:peliculas/models/pelicula_model.dart';
 class MovideHorizontal extends StatelessWidget {
 
   final List<Pelicula> peliculas;
+  final _pageControler = new PageController(
+      initialPage: 1,
+      viewportFraction: 0.3
+  );
 
+  final Function siguientePagina;
 
-  MovideHorizontal({@required this.peliculas});
+  MovideHorizontal({@required this.peliculas,@required this.siguientePagina});
 
   @override
   Widget build(BuildContext context) {
 
     final _screenSize = MediaQuery.of(context).size;
+
+    _pageControler.addListener( (){
+      if(_pageControler.position.pixels >= _pageControler.position.maxScrollExtent - 200)
+        siguientePagina();
+    });
+
     return Container(
       height: _screenSize.height * 0.2,
       child: PageView(
         pageSnapping: false,
-        controller: PageController(
-          initialPage: 1,
-          viewportFraction: 0.3
-        ),
+        controller: _pageControler,
         children: _tarjetas(context),
       ),
     );
