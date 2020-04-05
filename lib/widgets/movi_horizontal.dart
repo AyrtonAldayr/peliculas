@@ -26,10 +26,39 @@ class MovideHorizontal extends StatelessWidget {
 
     return Container(
       height: _screenSize.height * 0.2,
-      child: PageView(
+      child: PageView.builder(
         pageSnapping: false,
         controller: _pageControler,
-        children: _tarjetas(context),
+        //children: _tarjetas(context),
+        itemCount: peliculas.length,
+        itemBuilder: (context,i) => _tarjeta(context,peliculas[i])
+        ,
+      ),
+    );
+  }
+
+  Widget _tarjeta(BuildContext context, Pelicula pelicula){
+    return Container(
+      margin: EdgeInsets.only(right: 15.0),
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: FadeInImage(
+              image: NetworkImage(pelicula.getPosterImg()),
+              placeholder: AssetImage('assets/images/no-image.jpg'),
+              fit: BoxFit.cover,
+              height: 160.0,
+            ),
+          ),
+          SizedBox(height: 5.0,),
+          Text(
+            pelicula.title,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.caption,
+          )
+        ],
       ),
     );
   }
