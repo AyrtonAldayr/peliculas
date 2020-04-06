@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:peliculas/models/pelicula_model.dart';
+import 'package:peliculas/search/search_delegate.dart';
 import 'package:peliculas/widgets/card_swiper_widget.dart';
 import 'package:peliculas/widgets/movi_horizontal.dart';
 
@@ -16,7 +17,11 @@ class HomePage extends StatelessWidget {
         title: Text('Peliculas en Cines'),
         backgroundColor: Colors.indigo,
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search), onPressed: () {})
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: DataSearch());
+              })
         ],
       ),
       body: Container(
@@ -24,8 +29,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             //Divider(),
-            _swiperTarjetas(),
-            _footer(context),
+            _swiperTarjetas(), _footer(context),
           ],
         ),
       ),
@@ -55,22 +59,28 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(left: 20.0),
-            child: Text('Popular', style: Theme
-                .of(context)
-                .textTheme
-                .subhead,),
+            child: Text(
+              'Popular',
+              style: Theme.of(context).textTheme.subhead,
+            ),
           ),
-          SizedBox(height: 5.0,),
+          SizedBox(
+            height: 5.0,
+          ),
           //FutureBuilder(
           StreamBuilder(
               //future: peliculasProvider.getPopulares(),
-            stream: peliculasProvider.popularStream,
-              builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
+              stream: peliculasProvider.popularStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Pelicula>> snapshot) {
                 //snapshot.data?.forEach((f)=>print(f.title));
 
-                if(snapshot.hasData){
-                  return MovideHorizontal(peliculas: snapshot.data,siguientePagina: peliculasProvider.getPopulares,);
-                }else{
+                if (snapshot.hasData) {
+                  return MovideHorizontal(
+                    peliculas: snapshot.data,
+                    siguientePagina: peliculasProvider.getPopulares,
+                  );
+                } else {
                   return Center(child: CircularProgressIndicator());
                 }
                 return Container();
