@@ -65,7 +65,8 @@ class MovideHorizontal extends StatelessWidget {
     return GestureDetector(
       child: tarjeta,
       onTap: (){
-        print('Id de la pelicula ${pelicula.id} ${pelicula.title}');
+        //print('Id de la pelicula ${pelicula.id} ${pelicula.title}');
+        Navigator.pushNamed(context, 'detalle',arguments: pelicula);
       },
     );
   }
