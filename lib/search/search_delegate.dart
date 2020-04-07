@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas/models/pelicula_model.dart';
+import 'package:peliculas/providers/peliculas_provider.dart';
 
-class DataSearch extends SearchDelegate {
+class DataSearch extends SearchDelegate<String> {
+
+  DataSearch(): super(searchFieldLabel:"Buscar");
 
   String selecccion = '';
+  final peliculasProvider = new PeliculasProvider();
 
   final peliculas = [
     'Homer',
@@ -55,23 +60,37 @@ class DataSearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     // Las sugerencias que aparecen cuando la persona escribe
-    final listaSugerida = (query.isEmpty)
-        ? peliculasRecientes
-        : peliculas
-            .where((p) => p.toLowerCase().startsWith(query.toLowerCase())).toList();
 
-    return ListView.builder(
-      itemBuilder: (context, i) {
-        return ListTile(
-          leading: Icon(Icons.movie),
-          title: Text(listaSugerida[i]),
-          onTap: () {
-            selecccion = listaSugerida[i];
-            showResults(context);
-          },
-        );
-      },
-      itemCount: listaSugerida.length,
-    );
+    if (query.isEmpty) {
+      return Container();
+    }
+    return FutureBuilder(
+        future: peliculasProvider.getBuscarPelicula(query),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
+          if (snapshot.hasData) {
+            final peliculas = snapshot.data;
+            return ListView(
+              children: peliculas.map((peli) {
+                return ListTile(
+                  leading: FadeInImage(
+                    image: NetworkImage(peli.getPosterImg()),
+                    placeholder: AssetImage('assets/images/no-image.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(peli.title),
+                  subtitle: Text(peli.originalTitle),
+                  onTap: () {
+                    close(context, null);
+                    peli.uniqueId = '';
+                    Navigator.pushNamed(context, 'detalle', arguments: peli);
+                  },
+                );
+              }).toList(),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

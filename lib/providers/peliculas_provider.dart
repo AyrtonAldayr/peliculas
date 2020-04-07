@@ -72,4 +72,11 @@ class PeliculasProvider {
     final cast = new Actores.fromJsonList(decodeData['cast']);
     return cast.actores;
   }
+
+  Future<List<Pelicula>> getBuscarPelicula(String query) async {
+    final url = Uri.http(_url, '3/search/movie',
+        {'api_key': _apikey, 'language': _lenguaje, 'query': query});
+
+    return await _procesarRespuesta(url);
+  }
 }

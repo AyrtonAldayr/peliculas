@@ -40,7 +40,7 @@ class PeliculaDetalle extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 15.0),
         ),
         background: FadeInImage(
-          placeholder: AssetImage('assets/images/no-image.jpg'),
+          placeholder: AssetImage('assets/images/loading.gif'),
           image: NetworkImage(pelicula.getBackgroundImg()),
           fit: BoxFit.cover,
           fadeInDuration: Duration(milliseconds: 1),
@@ -101,6 +101,7 @@ class PeliculaDetalle extends StatelessWidget {
       child: Text(
         pelicula.overview,
         textAlign: TextAlign.justify,
+        //overflow: TextOverflow.ellipsis,
       ),
     );
   }
